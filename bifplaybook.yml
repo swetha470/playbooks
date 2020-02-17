@@ -1,0 +1,12 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: creating a new file
+      file:
+        path: /home/vagrant/playbooks/bifplaybook
+        state: touch
+    - name: inserting data using blockinfile module
+      blockinfile:
+        path: /home/vagrant/playbooks/bifplaybook
+        block: |
+          this line is entered by using blockin file module

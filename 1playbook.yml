@@ -10,7 +10,7 @@
     - name: starting apache service
       service:
         name: httpd
-        state: stopped
+        state: started
         enabled: yes  
     - name: creating index.html file
       file:
@@ -19,8 +19,27 @@
     - name: editing html file
       shell: echo "This is ansible added data" >> /var/www/html/index.html
       notify: restart httpd
+    - name: creating file1
+      file:
+        path: /home/vagrant/playbooks/file1
+        state: touch
+    - name: Inserting data Through bolckinfile
+      blockinfile:
+        path: /home/vagrant/playbooks/file1
+        block: |
+          This data is entered through blockin file
+    - name: changing data through lineinfile
+      lineinfile:
+        path: /home/vagrant/playbooks/file1
+        line: 'second line is inserted through lineinfile Module'
+    - name: changing file using regular expression
+      lineinfile:
+        path: /home/vagrant/playbooks/file1
+        state: absent
+        regexp: '^%second'
+#        line: 'second=this'
   handlers:
     - name: restart httpd
       service:
         name: httpd
-        state: started
+        state: restarted
