@@ -1,0 +1,26 @@
+- hosts: all
+  become: yes
+  vars: 
+    x: /var/www/html/index.html
+  tasks:
+    - name: install apache package
+      yum: 
+        name: httpd
+        state: latest
+    - name: starting apache service
+      service:
+        name: httpd
+        state: stopped
+        enabled: yes  
+    - name: creating index.html file
+      file:
+        path: "{{ x }}"
+        state: touch
+    - name: editing html file
+      shell: echo "This is ansible added data" >> /var/www/html/index.html
+      notify: restart httpd
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: started
